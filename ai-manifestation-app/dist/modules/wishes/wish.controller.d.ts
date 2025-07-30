@@ -1,0 +1,338 @@
+import { WishService } from './wish.service';
+import { CreateWishDto, UpdateWishDto, OptimizeWishDto } from '../../dto/wish.dto';
+export declare class WishController {
+    private readonly wishService;
+    constructor(wishService: WishService);
+    create(createWishDto: CreateWishDto, req: any): Promise<{
+        user: {
+            email: string;
+            username: string | null;
+            avatar: string | null;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+        goals: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            title: string;
+            description: string | null;
+            type: string;
+            status: string;
+            priority: string;
+            dueDate: Date | null;
+            completedAt: Date | null;
+            progress: number;
+            order: number;
+            specific: string | null;
+            measurable: string | null;
+            achievable: string | null;
+            relevant: string | null;
+            timeBound: string | null;
+            wishId: string;
+        }[];
+        visionBoardItems: {
+            id: string;
+            createdAt: Date;
+            title: string | null;
+            type: string;
+            order: number;
+            wishId: string | null;
+            content: string;
+            imageUrl: string | null;
+            positionX: number;
+            positionY: number;
+            width: number;
+            height: number;
+            visionBoardId: string;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    }>;
+    findAll(req: any): Promise<({
+        user: {
+            email: string;
+            username: string | null;
+            avatar: string | null;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+        goals: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            title: string;
+            description: string | null;
+            type: string;
+            status: string;
+            priority: string;
+            dueDate: Date | null;
+            completedAt: Date | null;
+            progress: number;
+            order: number;
+            specific: string | null;
+            measurable: string | null;
+            achievable: string | null;
+            relevant: string | null;
+            timeBound: string | null;
+            wishId: string;
+        }[];
+        visionBoardItems: {
+            id: string;
+            createdAt: Date;
+            title: string | null;
+            type: string;
+            order: number;
+            wishId: string | null;
+            content: string;
+            imageUrl: string | null;
+            positionX: number;
+            positionY: number;
+            width: number;
+            height: number;
+            visionBoardId: string;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    })[]>;
+    getWishStats(req: any): Promise<{
+        totalWishes: number;
+        activeWishes: number;
+        completedWishes: number;
+        optimizedWishes: number;
+        categoryStats: {};
+    }>;
+    findOne(id: string, req: any): Promise<{
+        user: {
+            email: string;
+            username: string | null;
+            avatar: string | null;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+        goals: ({
+            checkIns: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                type: string;
+                progress: number;
+                content: string;
+                mediaUrl: string | null;
+                mood: string | null;
+                notes: string | null;
+                goalId: string;
+            }[];
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            title: string;
+            description: string | null;
+            type: string;
+            status: string;
+            priority: string;
+            dueDate: Date | null;
+            completedAt: Date | null;
+            progress: number;
+            order: number;
+            specific: string | null;
+            measurable: string | null;
+            achievable: string | null;
+            relevant: string | null;
+            timeBound: string | null;
+            wishId: string;
+        })[];
+        visionBoardItems: {
+            id: string;
+            createdAt: Date;
+            title: string | null;
+            type: string;
+            order: number;
+            wishId: string | null;
+            content: string;
+            imageUrl: string | null;
+            positionX: number;
+            positionY: number;
+            width: number;
+            height: number;
+            visionBoardId: string;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    }>;
+    update(id: string, updateWishDto: UpdateWishDto, req: any): Promise<{
+        user: {
+            email: string;
+            username: string | null;
+            avatar: string | null;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+        goals: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            title: string;
+            description: string | null;
+            type: string;
+            status: string;
+            priority: string;
+            dueDate: Date | null;
+            completedAt: Date | null;
+            progress: number;
+            order: number;
+            specific: string | null;
+            measurable: string | null;
+            achievable: string | null;
+            relevant: string | null;
+            timeBound: string | null;
+            wishId: string;
+        }[];
+        visionBoardItems: {
+            id: string;
+            createdAt: Date;
+            title: string | null;
+            type: string;
+            order: number;
+            wishId: string | null;
+            content: string;
+            imageUrl: string | null;
+            positionX: number;
+            positionY: number;
+            width: number;
+            height: number;
+            visionBoardId: string;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    }>;
+    remove(id: string, req: any): Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    }>;
+    optimizeWish(id: string, optimizeDto: OptimizeWishDto, req: any): Promise<{
+        user: {
+            email: string;
+            username: string | null;
+            avatar: string | null;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+        };
+        goals: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            title: string;
+            description: string | null;
+            type: string;
+            status: string;
+            priority: string;
+            dueDate: Date | null;
+            completedAt: Date | null;
+            progress: number;
+            order: number;
+            specific: string | null;
+            measurable: string | null;
+            achievable: string | null;
+            relevant: string | null;
+            timeBound: string | null;
+            wishId: string;
+        }[];
+        visionBoardItems: {
+            id: string;
+            createdAt: Date;
+            title: string | null;
+            type: string;
+            order: number;
+            wishId: string | null;
+            content: string;
+            imageUrl: string | null;
+            positionX: number;
+            positionY: number;
+            width: number;
+            height: number;
+            visionBoardId: string;
+        }[];
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        title: string;
+        description: string | null;
+        status: string;
+        priority: string;
+        category: string;
+        isOptimized: boolean;
+        optimizedText: string | null;
+        keywords: string[];
+    }>;
+    generateImage(id: string, req: any): Promise<{
+        imageUrl: string;
+    }>;
+}

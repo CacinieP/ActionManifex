@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  wishes         Wish[]
+  goals          Goal[]
+  gratitudes     Gratitude[]
+  checkIns       CheckIn[]
+  rewards        Reward[]
+  growthPoints   GrowthPoint[]
+  visionBoards   VisionBoard[]
+
+  @@map("users")
+}
+
+model Wish {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String   // 健康/事业/财富/家庭/学习/旅行/爱情/其他
+  isOptimized Boolean  @default(false)
+  optimizedText String?
+  keywords    String[] // JSON array of keywords
+  status      String   @default("active") // active, completed, paused
+  priority    String   @default("medium") // low, medium, high
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals       Goal[]
+  visionBoardItems VisionBoardItem[]
+
+  @@map("wishes")
+}
+
+model Goal {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   // smart_goal, milestone, task
+  status      String   @default("pending") // pending, in_progress, completed, cancelled
+  priority    String   @default("medium")
+  dueDate     DateTime?
+  completedAt DateTime?
+  progress    Int      @default(0) // 0-100
+  order       Int      // For ordering within wish
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // SMART criteria
+  specific    String?
+  measurable  String?
+  achievable  String?
+  relevant    String?
+  timeBound   String?
+
+  // Relations
+  wishId      String
+  wish        Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkIns    CheckIn[]
+
+  @@map("goals")
+}
+
+model CheckIn {
+  id        String   @id @default(cuid())
+  type      String   // text, image, audio
+  content   String
+  mediaUrl  String?  // For image/audio
+  notes     String?
+  mood      String?  // happy, motivated, challenged, etc.
+  progress  Int      @default(0) // Progress update (0-100)
+  createdAt DateTime @default(now())
+
+  // Relations
+  goalId    String
+  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("check_ins")
+}
+
+model Gratitude {
+  id        String   @id @default(cuid())
+  content   String
+  type      String   @default("text") // text, image, audio
+  mediaUrl  String?  // For image/audio
+  tags      String[] // JSON array
+  mood      String?
+  aiQuote   String?  // AI generated inspirational quote
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("gratitudes")
+}
+
+model VisionBoard {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isPublic    Boolean  @default(false)
+  layout      String   // grid, collage, timeline
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       VisionBoardItem[]
+
+  @@map("vision_boards")
+}
+
+model VisionBoardItem {
+  id          String   @id @default(cuid())
+  type        String   // image, text, quote
+  title       String?
+  content     String
+  imageUrl    String?
+  positionX   Int      @default(0)
+  positionY   Int      @default(0)
+  width       Int      @default(200)
+  height      Int      @default(200)
+  order       Int      // For layering
+  createdAt   DateTime @default(now())
+
+  // Relations
+  visionBoardId String
+  visionBoard   VisionBoard @relation(fields: [visionBoardId], references: [id], onDelete: Cascade)
+  wishId        String?
+  wish          Wish?       @relation(fields: [wishId], references: [id])
+
+  @@map("vision_board_items")
+}
+
+model Reward {
+  id          String   @id @default(cuid())
+  type        String   // quote, card, badge, points
+  title       String
+  description String
+  content     String?  // Quote text, card image URL, etc.
+  points      Int      @default(0)
+  category    String   // motivation, achievement, milestone
+  isClaimed   Boolean  @default(false)
+  claimedAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("rewards")
+}
+
+model GrowthPoint {
+  id        String   @id @default(cuid())
+  points    Int
+  source    String   // wish_created, goal_completed, check_in, gratitude, etc.
+  sourceId  String?  // ID of related entity
+  createdAt DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("growth_points")
+}
+
+// AI Service related models for tracking AI interactions
+model AIInteraction {
+  id          String   @id @default(cuid())
+  type        String   // wish_optimization, goal_generation, quote_generation, image_generation
+  input       String   // Original input
+  output      String   // AI generated output
+  tokensUsed  Int?
+  cost        Float?
+  createdAt   DateTime @default(now())
+
+  @@map("ai_interactions")
+}

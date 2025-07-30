@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActionManifex - AI显化助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-star"></i>
+                    <h1>ActionManifex</h1>
+                </div>
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-tab="wishes">
+                        <i class="fas fa-heart"></i>
+                        <span>愿望</span>
+                    </button>
+                    <button class="nav-btn" data-tab="milestones">
+                        <i class="fas fa-flag"></i>
+                        <span>里程碑</span>
+                    </button>
+                    <button class="nav-btn" data-tab="gratitude">
+                        <i class="fas fa-seedling"></i>
+                        <span>感恩</span>
+                    </button>
+                    <button class="nav-btn" data-tab="profile">
+                        <i class="fas fa-user"></i>
+                        <span>我的</span>
+                    </button>
+                </nav>
+                <div class="user-info">
+                    <div class="energy-points">
+                        <i class="fas fa-bolt"></i>
+                        <span id="energyCount">0</span>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区 -->
+        <main class="main-content">
+            <!-- 愿望管理页面 -->
+            <div id="wishes" class="tab-content active">
+                <div class="wishes-header">
+                    <h2>我的愿望</h2>
+                    <button class="btn btn-primary" onclick="showCreateWishModal()">
+                        <i class="fas fa-plus"></i>
+                        新建愿望
+                    </button>
+                </div>
+
+                <div class="wishes-grid" id="wishesGrid">
+                    <!-- 愿望卡片将动态生成 -->
+                </div>
+            </div>
+
+            <!-- 里程碑管理页面 -->
+            <div id="milestones" class="tab-content">
+                <div class="milestones-header">
+                    <h2>里程碑进度</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="active">进行中</button>
+                        <button class="filter-btn" data-filter="completed">已完成</button>
+                    </div>
+                </div>
+
+                <div class="milestones-container" id="milestonesContainer">
+                    <!-- 里程碑将动态生成 -->
+                </div>
+            </div>
+
+            <!-- 感恩日记页面 -->
+            <div id="gratitude" class="tab-content">
+                <div class="gratitude-header">
+                    <h2>感恩日记</h2>
+                    <div class="gratitude-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="gratitudeStreak">0</span>
+                            <span class="stat-label">连续天数</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="gratitudeTotal">0</span>
+                            <span class="stat-label">总记录</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gratitude-content">
+                    <div class="gratitude-form">
+                        <h3>今日感恩</h3>
+                        <div class="input-methods">
+                            <button class="input-method-btn active" data-method="text">
+                                <i class="fas fa-pen"></i>
+                                文字
+                            </button>
+                            <button class="input-method-btn" data-method="image">
+                                <i class="fas fa-image"></i>
+                                图片
+                            </button>
+                            <button class="input-method-btn" data-method="audio">
+                                <i class="fas fa-microphone"></i>
+                                语音
+                            </button>
+                        </div>
+                        
+                        <div class="gratitude-input-area">
+                            <textarea id="gratitudeText" placeholder="今天我感恩..."></textarea>
+                            <div class="gratitude-tags">
+                                <input type="text" id="gratitudeTags" placeholder="添加标签 (用逗号分隔)">
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="saveGratitudeEntry()">
+                            <i class="fas fa-save"></i>
+                            保存感恩记录
+                        </button>
+                    </div>
+
+                    <div class="gratitude-tree">
+                        <h3>感恩成长树</h3>
+                        <div class="tree-visualization" id="gratitudeTree">
+                            <!-- 成长树将动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人资料页面 -->
+            <div id="profile" class="tab-content">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                        <button class="btn-edit-avatar">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="userName">用户名</h2>
+                        <p id="userLevel">等级 1</p>
+                        <div class="level-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0/100 经验值</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-heart"></i>
+                        <div class="stat-content">
+                            <h3>愿望总数</h3>
+                            <span class="stat-number" id="totalWishes">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-flag-checkered"></i>
+                        <div class="stat-content">
+                            <h3>完成里程碑</h3>
+                            <span class="stat-number" id="completedMilestones">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-seedling"></i>
+                        <div class="stat-content">
+                            <h3>感恩天数</h3>
+                            <span class="stat-number" id="gratitudeDays">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-bolt"></i>
+                        <div class="stat-content">
+                            <h3>能量积分</h3>
+                            <span class="stat-number" id="totalEnergy">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievements-section">
+                    <h3>成就徽章</h3>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- 成就徽章将动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 创建愿望模态框 -->
+    <div id="createWishModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>创建新愿望</h3>
+                <button class="close-btn" onclick="closeModal('createWishModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="wishTitle">愿望标题</label>
+                    <input type="text" id="wishTitle" placeholder="我想要...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishDescription">详细描述</label>
+                    <textarea id="wishDescription" placeholder="我已经拥有... (用现在时态描述)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishCategory">愿望类别</label>
+                    <select id="wishCategory">
+                        <option value="health">健康</option>
+                        <option value="career">事业</option>
+                        <option value="wealth">财富</option>
+                        <option value="relationship">关系</option>
+                        <option value="growth">成长</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishTags">标签</label>
+                    <input type="text" id="wishTags" placeholder="用逗号分隔多个标签">
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishPriority">优先级</label>
+                    <select id="wishPriority">
+                        <option value="1">低</option>
+                        <option value="2">中低</option>
+                        <option value="3">中</option>
+                        <option value="4">中高</option>
+                        <option value="5">高</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wishTargetDate">目标日期</label>
+                    <input type="date" id="wishTargetDate">
+                </div>
+                
+                <div class="ai-suggestions">
+                    <h4>AI 优化建议</h4>
+                    <div id="aiOptimizationResults" class="ai-results">
+                        <!-- AI优化结果将显示在这里 -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createWishModal')">取消</button>
+                <button class="btn btn-primary" onclick="createWish()">创建愿望</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 愿愿详情模态框 -->
+    <div id="wishDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>愿望详情</h3>
+                <button class="close-btn" onclick="closeModal('wishDetailModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="wish-detail-content">
+                    <div class="wish-info">
+                        <h3 id="detailWishTitle"></h3>
+                        <p id="detailWishDescription"></p>
+                        <div class="wish-meta">
+                            <span class="wish-category" id="detailWishCategory"></span>
+                            <span class="wish-priority" id="detailWishPriority"></span>
+                            <span class="wish-status" id="detailWishStatus"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="vision-board-section">
+                        <h4>心愿板</h4>
+                        <div class="vision-board" id="visionBoard">
+                            <!-- 愿景板内容 -->
+                        </div>
+                        <div class="vision-board-controls">
+                            <button class="btn btn-secondary" onclick="addImageToVisionBoard()">
+                                <i class="fas fa-plus"></i>
+                                添加图片
+                            </button>
+                            <button class="btn btn-secondary" onclick="generateAIImage()">
+                                <i class="fas fa-magic"></i>
+                                AI生成图片
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="milestones-section">
+                        <h4>里程碑</h4>
+                        <div class="milestones-list" id="wishMilestones">
+                            <!-- 里程碑列表 -->
+                        </div>
+                        <button class="btn btn-primary" onclick="generateMilestones()">
+                            <i class="fas fa-cogs"></i>
+                            AI生成里程碑
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
